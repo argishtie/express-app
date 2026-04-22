@@ -1,0 +1,14 @@
+{
+  "name": "express-app",
+  "version": "1.0.0",
+  "description": "Testing express and etc. logics",
+  "main": "app.js",
+  "repository": "https://github.com/argishtie/express-app.git",
+  "author": "Argishti <argishti@test.com>",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  }
+}
