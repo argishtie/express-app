@@ -9,16 +9,21 @@ const app = express();
 
 const { PORT } = process.env;
 
+app.use((req, res, next) => {
+  console.log(req.method, req.ip, req.url, new Date().toString());
+  next()
+});
+
 app.use(routes);
 
-app.use(( req, res, next) => {
+app.use((req, res, next) => {
   next(new HttpErrors(404));
 });
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message,
-    stack: err.stack
+    stack: err.stack,
   })
 });
 

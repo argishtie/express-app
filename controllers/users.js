@@ -3,7 +3,7 @@ import HttpErrors from "http-errors";
 export default {
   async profile(req, res, next) {
     try {
-      throw new HttpErrors(422, 'Invalid user id!');
+      // throw new HttpErrors(422, 'Invalid user id!');
 
       res.json({
         params: req.params,
