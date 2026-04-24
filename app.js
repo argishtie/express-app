@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import morgan from 'morgan';
 import HttpErrors from "http-errors";
 import { createServer } from 'http';
 
@@ -9,11 +10,7 @@ const app = express();
 
 const { PORT } = process.env;
 
-app.use((req, res, next) => {
-  console.log(req.method, req.ip, req.url, new Date().toString());
-  next()
-});
-
+app.use(morgan('dev'));
 app.use(routes);
 
 app.use((req, res, next) => {
