@@ -1,13 +1,11 @@
 import { Router } from 'express';
 
+import controller from '../controllers/users.js';
+
 const router = Router();
 
-router.get('/:name/:id', (req, res) => {
-  res.json({
-    params: req.params,
-    query: req.query,
-  });
-});
+router.get('/profile', controller.profile);
+router.post('/login', controller.login);
 
 export default router;
 
