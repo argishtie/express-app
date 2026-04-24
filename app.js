@@ -1,28 +1,26 @@
 import 'dotenv/config';
-import express from 'express';
 import morgan from 'morgan';
-import HttpErrors from "http-errors";
+import express from 'express';
 import { createServer } from 'http';
 
+import errorHandler from './middlewares/errorHandler.js';
 import routes from './routes/index.js';
 
 const app = express();
 
 const { PORT } = process.env;
 
+// middlewares
 app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// routes
 app.use(routes);
 
-app.use((req, res, next) => {
-  next(new HttpErrors(404));
-});
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message,
-    stack: err.stack,
-  })
-});
+// error handlers
+app.use(errorHandler.notFound);
+app.use(errorHandler.errors);
 
 const server = createServer(app);
 
