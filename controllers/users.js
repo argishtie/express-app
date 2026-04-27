@@ -19,6 +19,7 @@ export default {
       res.json({
         params: req.params,
         query: req.query,
+        body: req.body,
       });
     } catch (e) {
       next(e);
