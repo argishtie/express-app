@@ -69,13 +69,17 @@ export async function create(data) {
 export async function update(id, data) {
   const users = await readJSON();
 
-  const userIndex = users.findIndex(user => user.id === id) || null;
+  const userIndex = users.findIndex(user => user.id === id);
 
   if (userIndex > -1) {
-    users[userIndex] = { ...data, ...(users[userIndex] || {}) };
+    users[userIndex] = { ...(users[userIndex] || {}), ...data, };
+  } else {
+    return null;
   }
 
   await writeJSON(users);
+
+  return users[userIndex];
 }
 
 export function hashPassword(pass) {
@@ -99,16 +103,13 @@ export function decrypt(ciphertext) {
   }
 }
 
-// console.log(encrypt({userId: 1}));
-// console.log(decrypt('U2FsdGVkX1+WF8tSGbOzLnRfzuHgWWgkHRLnw30L/Os='));
-
 export default {
-  findById,
   create,
   update,
-  hashPassword,
-  checkEmailUnique,
-  findByEmail,
   encrypt,
   decrypt,
+  findById,
+  findByEmail,
+  hashPassword,
+  checkEmailUnique,
 }

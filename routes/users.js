@@ -20,7 +20,18 @@ router.post(
   controller.register,
 );
 
-router.get('/profile', authorization, controller.profile);
+router.get(
+  '/profile',
+  authorization,
+  controller.profile,
+);
+
+router.put(
+  '/profile',
+  authorization,
+  validation(schema.update, 'body'),
+  controller.update,
+);
 
 export default router;
 

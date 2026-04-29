@@ -3,20 +3,6 @@ import HttpErrors from "http-errors";
 import Users from "../models/users.js";
 
 export default {
-  async profile(req, res, next) {
-    try {
-      const user = await Users.findById(
-        req.userId,
-      );
-
-      res.json({
-        user,
-      });
-    } catch (e) {
-      next(e);
-    }
-  },
-
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -75,4 +61,35 @@ export default {
       next(e);
     }
   },
+
+  async profile(req, res, next) {
+    try {
+      const user = await Users.findById(
+        req.userId,
+      );
+
+      res.json({
+        user,
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  async update(req, res, next) {
+    try {
+      const { name, age } = req.body;
+
+      const user = await Users.update(
+        req.userId,
+        { name, age },
+      )
+
+      res.json({
+        user,
+      })
+    } catch (e) {
+      next(e);
+    }
+  }
 }

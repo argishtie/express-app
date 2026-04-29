@@ -2,15 +2,15 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/data', (req, res) => {
+router.get('/', (req, res) => {
   res.json({
-    query: req.query,
+    message: 'Welcome to the Post!'
   });
 });
 
-router.post('/data/kuku', (req, res) => {
+router.post('/', (req, res) => {
   res.json({
-    query: req.query,
+    message: 'Welcome to the Post!'
   });
 });
 
