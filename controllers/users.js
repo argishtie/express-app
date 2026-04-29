@@ -1,13 +1,16 @@
 import HttpErrors from "http-errors";
 
+import Users from "../models/users.js";
+
 export default {
   async profile(req, res, next) {
     try {
-      // throw new HttpErrors(422, 'Invalid user id!');
+      const user = await Users.findById(
+        req.userId,
+      );
 
       res.json({
-        params: req.params,
-        query: req.query,
+        user,
       });
     } catch (e) {
       next(e);
@@ -16,10 +19,57 @@ export default {
 
   async login(req, res, next) {
     try {
+      const { email, password } = req.body;
+
+      const user = await Users.findByEmail(email);
+
+      if (!user || (user.password !== Users.hashPassword(password))) {
+        throw new HttpErrors(401, {
+          errors: {
+            email: "Invalid email or password",
+          }
+        });
+      }
+
+      const token = Users.encrypt({
+        userId: user.id,
+      });
+
+      delete user.password;
+
       res.json({
-        params: req.params,
-        query: req.query,
-        body: req.body,
+        token,
+        user,
+      });
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  async register(req, res, next) {
+    try {
+      const { name, email, password, age } = req.body;
+
+      if (await Users.checkEmailUnique(email)) {
+        throw new HttpErrors(422, {
+          errors: {
+            email: 'Email is already in use!',
+          },
+        });
+      }
+
+      const user = await Users.create({
+        name,
+        email,
+        password: Users.hashPassword(password),
+        age
+      });
+
+      delete user.password;
+
+      res.json({
+        message: 'User registered successfully',
+        user,
       });
     } catch (e) {
       next(e);
