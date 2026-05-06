@@ -20,7 +20,7 @@ export default {
 
       const token = Users.encrypt({
         userId: user.id,
-        expiresIn: moment().add(2, 'minutes').toISOString(),
+        expiresIn: moment().add(2, 'hour').toISOString(),
       });
 
       delete user.password;
@@ -69,7 +69,7 @@ export default {
       const user = await Users.findById(
         req.userId,
       );
-
+      delete user.password;
       res.json({
         user,
       });

@@ -16,12 +16,12 @@ if (!localStorage.getItem('token')) {
 
     const result = await response.json();
 
-    console.log(result);
-
     if (!response.ok) {
       alert('Invalid token!');
       window.location.href = '/users/login';
     }
+
+    localStorage.setItem('userDate', JSON.stringify(result.user));
   } catch (error) {
     alert('Invalid token!');
     window.location.href = '/users/login';
