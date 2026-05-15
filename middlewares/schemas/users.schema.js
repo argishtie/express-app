@@ -17,4 +17,9 @@ export default {
     name: Joi.string().alphanum().required(),
     age: Joi.number().integer().min(10).max(200).required(),
   }),
+
+  getUsersList: Joi.object({
+    page: Joi.number().integer().min(1).max(1000).default(1),
+    limit: Joi.number().integer().min(5).max(200).default(20),
+  }),
 }

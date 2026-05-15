@@ -96,5 +96,18 @@ export default {
     } catch (e) {
       next(e);
     }
+  },
+
+  async getUsersList(req, res, next) {
+    try {
+      const data = await Users.getUsersList(
+        req.query.page,
+        req.query.limit,
+      )
+
+      res.json(data)
+    } catch (e) {
+      next(e);
+    }
   }
 }
