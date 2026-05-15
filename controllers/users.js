@@ -10,6 +10,8 @@ export default {
 
       const user = await Users.findByEmail(email);
 
+      console.log(user)
+
       if (!user || (user.password !== Users.hashPassword(password))) {
         throw new HttpErrors(401, {
           errors: {
@@ -69,6 +71,7 @@ export default {
       const user = await Users.findById(
         req.userId,
       );
+
       delete user.password;
       res.json({
         user,

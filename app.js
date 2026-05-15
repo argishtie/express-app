@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import express from 'express';
 import { createServer } from 'http';
 
-
+import './migrate.js';
 
 import routes from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';

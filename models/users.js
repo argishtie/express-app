@@ -1,85 +1,104 @@
-import fs from 'fs/promises';
+import _ from 'lodash';
 import md5 from 'md5';
-import path from 'path';
-import { v4 as uuidV4 } from 'uuid';
 import CryptoJS from 'crypto-js';
+
+import DbMysql from "../clients/db.mysql.js";
 
 const {
   PASSWORD_SECRET,
   TOKEN_SECRET,
 } = process.env;
 
-export function getDataPath(dirPath) {
-  return path.resolve(process.cwd(), 'data', dirPath);
-}
-
-const authorsFile = getDataPath('users.json');
-
-export async function readJSON() {
+export async function findById(id) {
   try {
-    const data = await fs.readFile(authorsFile, 'utf8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
+    const [result = null] = (await DbMysql.query(
+      `SELECT *
+       FROM users
+       WHERE id = ?
+       limit 1;`,
+      [id]
+    )) || [];
 
-export async function writeJSON(data) {
-  try {
-    console.log(authorsFile)
-    await fs.writeFile(authorsFile, JSON.stringify(data, null, 2));
+    return _.head(result) || null;
   } catch (error) {
     console.error(error);
+    return null;
   }
-}
-
-export async function findById(id) {
-  const users = await readJSON();
-
-  return users.find(user => user.id === id) || null;
 }
 
 export async function findByEmail(email) {
-  const users = await readJSON();
+  try {
+    const [result = null] = (await DbMysql.query(
+      `SELECT *
+       FROM users
+       WHERE email = ?
+       limit 1;`,
+      [email]
+    )) || [];
 
-  return users.find(user => user.email === email) || null;
+    return _.head(result) || null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 export async function checkEmailUnique(email) {
-  const users = await readJSON();
+  try {
+    const [result = null] = (await DbMysql.query(
+      `SELECT *
+       FROM users
+       WHERE email = ?
+       limit 1;`,
+      [email]
+    )) || [];
 
-  return !!(users.find(user => user.email === email));
-}
-
-export async function create(data) {
-  const users = await readJSON();
-
-  const newUser = {
-    ...data,
-    id: uuidV4(),
+    return !_.isEmpty(result);
+  } catch (error) {
+    console.error(error);
+    return null;
   }
-
-  users.push(newUser);
-
-  await writeJSON(users);
-
-  return newUser;
 }
 
-export async function update(id, data) {
-  const users = await readJSON();
+export async function create({ name, age, email, password }) {
+  try {
+    const result = await DbMysql.query(
+      `insert into users (name, age, email, password)
+       values (?, ?, ?, ?);`,
+      [name, age, email, password]
+    );
 
-  const userIndex = users.findIndex(user => user.id === id);
+    const id = _.get(result, '0.insertId', null);
 
-  if (userIndex > -1) {
-    users[userIndex] = { ...(users[userIndex] || {}), ...data, };
-  } else {
+    return await findById(id);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function update(id, { name, age }, returnData = false) {
+  try {
+    const result = await DbMysql.query(
+      `
+          update users
+          set name = ?,
+              age  = ?
+          WHERE id = ?;
+      `,
+      [name, age, id]
+    );
+
+    const affectedRows = _.get(result, '0.affectedRows', null);
+
+    return returnData
+      ? await findById(id)
+      : affectedRows > 0;
+  } catch (error) {
+    console.error(error);
     return null;
   }
 
-  await writeJSON(users);
-
-  return users[userIndex];
 }
 
 export function hashPassword(pass) {

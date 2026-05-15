@@ -16,17 +16,10 @@ const connection = mysql.createConnection({
   database: MY_SQL_DATABASE,
 });
 
-(async () => {
-  try {
-    await connection.connect(function (err, db) {
-      if (err) {
-        console.log(err)
-      }
-    });
-    console.log('Connected to DB');
-  } catch (err) {
-    console.error(err);
-  }
-})();
+connection.connect(function (err, db) {
+  if (!err) {
+    console.log('DB connection succeeded.');
+  } else console.log(err, db)
+});
 
 export default connection.promise();
