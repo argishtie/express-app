@@ -1,28 +1,44 @@
-import moment from 'moment';
+// import moment from 'moment';
+import jwt from "jsonwebtoken";
 import HttpErrors from "http-errors";
 
 import Users from '../models/users.js'
 
+const {
+  TOKEN_SECRET,
+} = process.env;
+
 export default async (req, res, next) => {
   try {
-    const token = req.headers?.authorization || null;
+    const token = String(req.headers?.authorization)
+      .replace('Bearer')
+      .trim() || null;
 
     if (!token) {
       next(new HttpErrors(401));
       return;
     }
 
-    const decryptData = Users.decrypt(token);
+    let decryptData = null;
 
-    if (!decryptData || !decryptData?.userId || !decryptData?.expiresIn) {
+    try {
+      decryptData = jwt.verify(token, TOKEN_SECRET);
+    } catch (err) {
+      console.log(err.message)
+    }
+
+    // const decryptData = Users.decrypt(token);
+
+    // if (!decryptData || !decryptData?.userId || !decryptData?.expiresIn) {
+    if (!decryptData || !decryptData?.userId) {
       next(new HttpErrors(401));
       return;
     }
 
-    if (moment().isAfter(moment(decryptData.expiresIn))) {
-      next(new HttpErrors(401, 'Token expired!'));
-      return;
-    }
+    // if (moment().isAfter(moment(decryptData.expiresIn))) {
+    //   next(new HttpErrors(401, 'Token expired!'));
+    //   return;
+    // }
 
     req.userId = decryptData?.userId;
 
