@@ -6,7 +6,7 @@ const {
   TOKEN_SECRET,
 } = process.env;
 
-import Users from "../models/users.js";
+import Users from "../models/users_old.js";
 
 export default {
   async login(req, res, next) {

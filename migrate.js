@@ -1,18 +1,24 @@
-import DbMysql from './clients/db.mysql.js';
+import { Users } from './models/index.js';
 
 ;(async () => {
   console.log('Running migration...');
-  await DbMysql.query(`
-      create table if not exists users
-      (
-          id       bigint primary key auto_increment,
-          name     varchar(30),
-          age      int,
-          email    VARCHAR(255),
-          password VARCHAR(255)
-      );
-  `);
-  console.log('-> User table successfully created');
+
+  const models = [
+    Users,
+  ];
+
+  for (const model of models) {
+    try {
+      console.log('model -> ', model.name);
+
+      await model.sync({ alter: true });
+
+      await model?.createDefaults();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
 
   console.log('Migration finished successfully.');
 })();

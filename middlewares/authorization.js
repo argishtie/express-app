@@ -2,7 +2,7 @@
 import jwt from "jsonwebtoken";
 import HttpErrors from "http-errors";
 
-import Users from '../models/users.js'
+import Users from '../models/users_old.js'
 
 const {
   TOKEN_SECRET,
