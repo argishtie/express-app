@@ -1,10 +1,13 @@
-import { Users } from './models/index.js';
+import { Users, Captains, Ships, CaptainShips } from './models/index.js';
 
 ;(async () => {
   console.log('Running migration...');
 
   const models = [
     Users,
+    Captains,
+    Ships,
+    CaptainShips,
   ];
 
   for (const model of models) {
@@ -13,12 +16,11 @@ import { Users } from './models/index.js';
 
       await model.sync({ alter: true });
 
-      await model?.createDefaults();
+      await model?.createDefaults?.();
     } catch (err) {
       console.error(err);
     }
   }
-
 
   console.log('Migration finished successfully.');
 })();

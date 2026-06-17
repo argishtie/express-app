@@ -2,7 +2,7 @@
 import jwt from "jsonwebtoken";
 import HttpErrors from "http-errors";
 
-import Users from '../models/users_old.js'
+import Users from '../models/Users.js'
 
 const {
   TOKEN_SECRET,
@@ -42,7 +42,7 @@ export default async (req, res, next) => {
 
     req.userId = decryptData?.userId;
 
-    const user = await Users.findById(req.userId)
+    const user = await Users.findByPk(req.userId)
 
     if (!user) {
       next(new HttpErrors(401));

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import upload from '../middlewares/upload.js';
 
 import controller from '../controllers/users.js';
 
@@ -7,6 +8,18 @@ import schema from '../middlewares/schemas/users.schema.js';
 import authorization from "../middlewares/authorization.js";
 
 const router = Router();
+
+router.post('/avater', upload.single('file'), function (req, res, next) {
+  try {
+    console.log(req.file)
+    console.log(req.body)
+    res.json({
+      status: 'ok',
+    })
+  } catch (e) {
+    next(e);
+  }
+});
 
 router.post(
   '/login',
@@ -18,6 +31,11 @@ router.post(
   '/register',
   validation(schema.register, 'body'),
   controller.register,
+);
+
+router.get(
+  '/activate/:activationToken',
+  controller.activateAccount,
 );
 
 router.get(

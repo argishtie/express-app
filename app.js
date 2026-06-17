@@ -6,6 +6,8 @@ import { createServer } from 'http';
 
 import './migrate.js';
 
+import cors from './middlewares/cors.js';
+
 import routes from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
 
@@ -21,6 +23,15 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve('public')));
+
+app.get('/test', (req, res) => {
+  res.json({
+    test: true
+  })
+})
+
+// cors
+app.use(cors);
 
 // routes
 app.use(routes);
