@@ -5,7 +5,7 @@ console.log(user)
 const userInfo = document.querySelector('#user_info')
 const modalBody = document.querySelector('.modal-body')
 
-if (userInfo) {
+if (userInfo && user) {
   for (const [key, value] of Object.entries(user)) {
     const span = document.createElement('span');
     const br = document.createElement('br');
