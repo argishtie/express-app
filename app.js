@@ -3,6 +3,7 @@ import path from "path";
 import morgan from 'morgan';
 import express from 'express';
 import { createServer } from 'http';
+import { fileURLToPath } from 'url';
 
 // import './migrate.js';
 
@@ -10,6 +11,8 @@ import cors from './middlewares/cors.js';
 
 import routes from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -22,7 +25,7 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.resolve('public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/test', (req, res) => {
   res.json({
