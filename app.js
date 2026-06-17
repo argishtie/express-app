@@ -31,7 +31,7 @@ app.get('/test', (req, res) => {
 })
 
 // cors
-app.use(cors);
+// app.use(cors);
 
 // routes
 app.use(routes);
