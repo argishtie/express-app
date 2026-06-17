@@ -9,6 +9,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "node ./migrate.js",
+    "start": "node index.js",
     "dev": "nodemon -r dotenv/config app.js dotenv_config_path=./.env"
   },
   "devDependencies": {

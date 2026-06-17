@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import express from 'express';
 import { createServer } from 'http';
 
-import './migrate.js';
+// import './migrate.js';
 
 import cors from './middlewares/cors.js';
 
