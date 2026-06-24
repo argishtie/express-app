@@ -64,29 +64,35 @@
 <ul id="messages"></ul>
 
 <form id="form" action="">
-    <input id="input" autocomplete="off" />
+    <input type="text" id="input" autocomplete="off" />
+    <input type="text" id="user_name" autocomplete="off" />
     <button>Send</button>
 </form>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
+  const defaultUserName = 'User' + Date.now();
 
   const form = document.getElementById('form');
   const input = document.getElementById('input');
   const messages = document.getElementById('messages');
+  const userName = document.querySelector('#user_name');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (input.value) {
-      socket.emit('chat message', input.value);
+      socket.emit('chat message', {
+        userName: userName.value || defaultUserName,
+        message: input.value,
+      });
       input.value = '';
     }
   });
 
   socket.on('chat message', (msg) => {
     const item = document.createElement('li');
-    item.textContent = msg;
+    item.innerHTML = `<b>${msg.userName}</b>: ${msg.message}`;
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   });
