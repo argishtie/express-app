@@ -4,10 +4,12 @@ import morgan from 'morgan';
 import express from 'express';
 import { createServer } from 'http';
 import { fileURLToPath } from 'url';
+import { Server } from 'socket.io';
+import socketIo from "./services/socket.io.js";
 
 // import './migrate.js';
 
-import cors from './middlewares/cors.js';
+// import cors from './middlewares/cors.js';
 
 import routes from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
@@ -44,6 +46,8 @@ app.use(errorHandler.notFound);
 app.use(errorHandler.errors);
 
 const server = createServer(app);
+
+socketIo(new Server(server))
 
 server.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
