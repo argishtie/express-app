@@ -30,6 +30,14 @@ function initSocket() {
 
   // Listen for incoming live chat messages
   socket.on('new_message', (messageData) => {
+    Toastify({
+      text: "New message: " + messageData.message,
+      className: "info",
+      style: {
+        background: "linear-gradient(to right, #00b09b, #96c93d)",
+      }
+    }).showToast();
+
     // If message belongs to the current open chat, append it visually
     if (currentTargetId && (messageData.from === currentTargetId || messageData.to === currentTargetId)) {
       appendMessage(messageData);
