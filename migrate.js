@@ -1,4 +1,6 @@
-import { Users, Captains, Ships, CaptainShips } from './models/index.js';
+import {
+  Users, Captains, Ships, CaptainShips, Messages,
+} from './models/index.js';
 
 ;(async () => {
   console.log('Running migration...');
@@ -8,6 +10,7 @@ import { Users, Captains, Ships, CaptainShips } from './models/index.js';
     Captains,
     Ships,
     CaptainShips,
+    Messages,
   ];
 
   for (const model of models) {

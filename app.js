@@ -4,12 +4,9 @@ import morgan from 'morgan';
 import express from 'express';
 import { createServer } from 'http';
 import { fileURLToPath } from 'url';
-import { Server } from 'socket.io';
-import socketIo from "./services/socket.io.js";
+import Socket from "./services/Socket.js";
 
 // import './migrate.js';
-
-// import cors from './middlewares/cors.js';
 
 import routes from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
@@ -34,10 +31,6 @@ app.get('/test', (req, res) => {
     test: true
   })
 })
-
-// cors
-// app.use(cors);
-
 // routes
 app.use(routes);
 
@@ -47,7 +40,10 @@ app.use(errorHandler.errors);
 
 const server = createServer(app);
 
-socketIo(new Server(server))
+Socket.init(server)
+  .catch((err) => {
+    console.log(err)
+  })
 
 server.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
